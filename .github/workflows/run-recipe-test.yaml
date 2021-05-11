@@ -28,7 +28,10 @@ jobs:
         # id: download-bakeries
         # run: |
           # curl https://raw.githubusercontent.com/pangeo-forge/bakery-database/main/bakeries.yaml -o ${GITHUB_WORKSPACE}/bakeries.yaml
-
+      - name: Echo changed files
+        id: echo-changed
+        run: |
+          echo ${{ steps.changed-files.outputs.all }}
       - name: Locate Pull Requests meta.yaml
         id: meta
         run: |
