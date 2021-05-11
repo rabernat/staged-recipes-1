@@ -17,7 +17,7 @@ jobs:
         id: changed-files
         # Set outputs using the command.
         run: |
-          echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | xargs)"
+          echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.client_payload.pull_request.head.sha }} ${{ github.event.client_payload.pull_request.base.sha }} | xargs)"
 
       # - name: Get the files changed in the Pull Request
         # id: changed-files
@@ -28,10 +28,6 @@ jobs:
         # id: download-bakeries
         # run: |
           # curl https://raw.githubusercontent.com/pangeo-forge/bakery-database/main/bakeries.yaml -o ${GITHUB_WORKSPACE}/bakeries.yaml
-      - name: Echo changed files
-        id: echo-changed
-        run: |
-          echo ${{ steps.changed-files.outputs.all }}
       - name: Locate Pull Requests meta.yaml
         id: meta
         run: |
