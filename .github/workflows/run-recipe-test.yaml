@@ -12,25 +12,29 @@ jobs:
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
           repository: ${{ github.event.client_payload.pull_request.head.repo.full_name }}
           ref: ${{ github.event.client_payload.pull_request.head.ref }}
+      - name: Dump the client payload context
+        env:
+          PAYLOAD_CONTEXT: ${{ toJson(github.event.client_payload) }}
+        run: echo "$PAYLOAD_CONTEXT"
 
-      - name: Get the files changed in the Pull Request
-        id: changed-files
-        uses: jitterbit/get-changed-files@v1
-        continue-on-error: true
+      # - name: Get the files changed in the Pull Request
+        # id: changed-files
+        # uses: jitterbit/get-changed-files@v1
+        # continue-on-error: true
 
-      - name: Download bakeries.yaml
-        id: download-bakeries
-        run: |
-          curl https://raw.githubusercontent.com/pangeo-forge/bakery-database/main/bakeries.yaml -o ${GITHUB_WORKSPACE}/bakeries.yaml
+      # - name: Download bakeries.yaml
+        # id: download-bakeries
+        # run: |
+          # curl https://raw.githubusercontent.com/pangeo-forge/bakery-database/main/bakeries.yaml -o ${GITHUB_WORKSPACE}/bakeries.yaml
 
-      - name: Locate Pull Requests meta.yaml
-        id: meta
-        run: |
-          for changed_file in ${{ steps.changed-files.outputs.all }}; do
-            if [[ ${changed_file} =~ ^.*recipes\/.*meta\.(yml|yaml)$ ]];
-            then
-              echo "::set-output name=META_YAML::${changed_file}";
-              exit 0
-            fi
-          done
-          exit 1 # Fail - meta.yaml required
+      # - name: Locate Pull Requests meta.yaml
+        # id: meta
+        # run: |
+          # for changed_file in ${{ steps.changed-files.outputs.all }}; do
+            # if [[ ${changed_file} =~ ^.*recipes\/.*meta\.(yml|yaml)$ ]];
+            # then
+              # echo "::set-output name=META_YAML::${changed_file}";
+              # exit 0
+            # fi
+          # done
+          # exit 1 # Fail - meta.yaml required
