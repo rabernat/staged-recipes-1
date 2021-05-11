@@ -10,7 +10,5 @@ jobs:
         uses: peter-evans/slash-command-dispatch@v2
         with:
           token: ${{ secrets.ACTIONS_BOT_TOKEN }}
-          permission: admin
           commands: run-recipe-test
-          issue-type: pull-request
 
