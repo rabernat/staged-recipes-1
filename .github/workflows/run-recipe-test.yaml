@@ -1,9 +1,9 @@
 name: Run Recipe Test 
 on:
   repository_dispatch:
-    types: [run-recipe-test]
+    types: [run-recipe-test-command]
 jobs:
-  black:
+  run-recipe-test:
     runs-on: ubuntu-latest
     steps:
       # Checkout the pull request branch

@@ -1,7 +1,7 @@
 name: Process PR Recipe
 
 on:
-  pull_request: 
+  push: 
     branches: master
 
 jobs:
@@ -39,6 +39,7 @@ jobs:
           path_to_meta_yaml: ${{ steps.meta.outputs.META_YAML }}
           path_to_bakeries_yaml: bakeries.yaml
         env:
+          WAT_SECRET: ${{ secrets.WAT }}
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
           PREFECT__CLOUD__AUTH_TOKEN: ${{ secrets.PREFECT__CLOUD__AUTH_TOKEN }}
 
