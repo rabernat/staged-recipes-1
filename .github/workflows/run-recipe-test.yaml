@@ -37,7 +37,7 @@ jobs:
           done
           exit 1 # Fail - meta.yaml required
 
-     - name: Process Pull Requests recipe
+      - name: Process Pull Requests recipe
         if: ${{ steps.meta.outputs.META_YAML != null }}
         uses: pangeo-forge/recipe-prefect-action@pangeonotebook-2021.05.04_prefect-0.14.7_pangeoforgerecipes-0.3.3
         with:
