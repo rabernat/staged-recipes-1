@@ -1,4 +1,4 @@
-title: "NOAA Optimum Interpolated SST"
+title: "NOAA Optimum Interpolated SST 2"
 description: "Analysis-ready Zarr datasets derived from NOAA OISST NetCDF"
 pangeo_forge_version: "0.0.1"  # do we need a separate spec version
 recipes:
