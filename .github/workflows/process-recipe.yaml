@@ -2,7 +2,7 @@ name: Process PR Recipe
 
 on:
   push: 
-    branches: master
+    branches: wat
 
 jobs:
   process-recipe:

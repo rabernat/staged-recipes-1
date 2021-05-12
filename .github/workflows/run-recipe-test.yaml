@@ -20,15 +20,11 @@ jobs:
         run: |
           echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.client_payload.pull_request.head.sha }} ${{ github.event.client_payload.pull_request.base.sha }} | xargs)"
 
-      # - name: Get the files changed in the Pull Request
-        # id: changed-files
-        # uses: jitterbit/get-changed-files@v1
-        # continue-on-error: true
+      - name: Download bakeries.yaml
+        id: download-bakeries
+        run: |
+          curl https://raw.githubusercontent.com/pangeo-forge/bakery-database/main/bakeries.yaml -o ${GITHUB_WORKSPACE}/bakeries.yaml
 
-      # - name: Download bakeries.yaml
-        # id: download-bakeries
-        # run: |
-          # curl https://raw.githubusercontent.com/pangeo-forge/bakery-database/main/bakeries.yaml -o ${GITHUB_WORKSPACE}/bakeries.yaml
       - name: Locate Pull Requests meta.yaml
         id: meta
         run: |
@@ -40,3 +36,13 @@ jobs:
             fi
           done
           exit 1 # Fail - meta.yaml required
+
+     - name: Process Pull Requests recipe
+        if: ${{ steps.meta.outputs.META_YAML != null }}
+        uses: pangeo-forge/recipe-prefect-action@pangeonotebook-2021.05.04_prefect-0.14.7_pangeoforgerecipes-0.3.3
+        with:
+          path_to_meta_yaml: ${{ steps.meta.outputs.META_YAML }}
+          path_to_bakeries_yaml: bakeries.yaml
+        env:
+          SECRETS_CONTEXT: ${{ toJson(secrets) }}
+          PREFECT__CLOUD__AUTH_TOKEN: ${{ secrets.PREFECT__CLOUD__AUTH_TOKEN }}
