@@ -1,4 +1,4 @@
-name: Run Recipe Test 
+name: Run recipe test
 on:
   repository_dispatch:
     types: [run-recipe-test-command]
@@ -25,7 +25,7 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/pangeo-forge/bakery-database/main/bakeries.yaml -o ${GITHUB_WORKSPACE}/bakeries.yaml
 
-      - name: Locate Pull Requests meta.yaml
+      - name: Locate pr meta.yaml
         id: meta
         run: |
           for changed_file in ${{ steps.changed-files.outputs.all }}; do
@@ -43,10 +43,12 @@ jobs:
         id: yaml-parser
         with:
           yaml-file: ${{ steps.meta.outputs.META_YAML }}
+
+      - name: View yaml parser output
         run: |
           echo "${{ steps.yaml-parser.outputs.pangeo_forge_version }}"
 
-      - name: Process Pull Requests recipe
+      - name: Process pr recipe
         if: ${{ steps.meta.outputs.META_YAML != null }}
         uses: pangeo-forge/recipe-prefect-action@pangeonotebook-2021.05.04_prefect-0.14.7_pangeoforgerecipes-0.3.3
         with:
