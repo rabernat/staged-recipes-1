@@ -56,7 +56,7 @@ jobs:
 
       - name: Process pr recipe
         if: ${{ steps.meta.outputs.META_YAML != null }}
-        uses: ${{ format('pangeo-forge/recipe-prefect-action@pangeonotebook-2021.05.04_prefect-0.14.7_pangeoforgerecipes-{0}', steps.meta-yaml-parser.outputs.pangeo_forge_version) }}
+        uses: ${{ format('pangeo-forge/recipe-prefect-action@pangeonotebook-2021.05.04_prefect-0.14.7_pangeoforgerecipes-{0}', env.pangeoforge_version) }}
         with:
           path_to_meta_yaml: ${{ steps.meta.outputs.META_YAML }}
           path_to_bakeries_yaml: bakeries.yaml
@@ -64,3 +64,4 @@ jobs:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
           PREFECT__CLOUD__AUTH_TOKEN: ${{ secrets.PREFECT__CLOUD__AUTH_TOKEN }}
           PREFECT_PROJECT_NAME: ${{ secrets.PREFECT_PROJECT_NAME }}
+          pangeoforge_version: ${{ steps.meta-yaml-parser.outputs.pangeo_forge_version }}
