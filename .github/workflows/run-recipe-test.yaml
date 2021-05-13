@@ -37,6 +37,15 @@ jobs:
           done
           exit 1 # Fail - meta.yaml required
 
+      - name: Meta yaml parser
+        if: ${{ steps.meta.outputs.META_YAML != null }}
+        uses: juliojimenez/yamler@v0
+        id: yaml-parser
+        with:
+          yaml-file: ${{ steps.meta.outputs.META_YAML }}
+        run: |
+          echo "${{ steps.yaml-parser.outputs.pangeo_forge_version }}"
+
       - name: Process Pull Requests recipe
         if: ${{ steps.meta.outputs.META_YAML != null }}
         uses: pangeo-forge/recipe-prefect-action@pangeonotebook-2021.05.04_prefect-0.14.7_pangeoforgerecipes-0.3.3
