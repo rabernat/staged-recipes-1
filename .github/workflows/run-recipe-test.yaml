@@ -14,16 +14,16 @@ jobs:
           repository: ${{ github.event.client_payload.pull_request.head.repo.full_name }}
           ref: ${{ github.event.client_payload.pull_request.head.ref }}
 
+      - name: Download bakeries.yaml
+        id: download-bakeries
+        run: |
+          curl https://raw.githubusercontent.com/pangeo-forge/bakery-database/main/bakeries.yaml -o ${GITHUB_WORKSPACE}/bakeries.yaml
+
       - name: Get changed files
         id: changed-files
         # Set outputs using the command.
         run: |
           echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.client_payload.pull_request.head.sha }} ${{ github.event.client_payload.pull_request.base.sha }} | xargs)"
-
-      - name: Download bakeries.yaml
-        id: download-bakeries
-        run: |
-          curl https://raw.githubusercontent.com/pangeo-forge/bakery-database/main/bakeries.yaml -o ${GITHUB_WORKSPACE}/bakeries.yaml
 
       - name: Locate pr meta.yaml
         id: meta
@@ -40,17 +40,23 @@ jobs:
       - name: Meta yaml parser
         if: ${{ steps.meta.outputs.META_YAML != null }}
         uses: juliojimenez/yamler@v0
-        id: yaml-parser
+        id: meta-yaml-parser
         with:
           yaml-file: ${{ steps.meta.outputs.META_YAML }}
 
+      - name: Bakery yaml parser
+        uses: juliojimenez/yamler@v0
+        id: bakery-yaml-parser
+        with:
+          yaml-file: bakeries.yaml
+
       - name: View yaml parser output
         run: |
-          echo "${{ steps.yaml-parser.outputs.pangeo_forge_version }}"
+          echo "${{ steps.meta-yaml-parser.outputs.pangeo_forge_version }}"
 
       - name: Process pr recipe
         if: ${{ steps.meta.outputs.META_YAML != null }}
-        uses: pangeo-forge/recipe-prefect-action@pangeonotebook-2021.05.04_prefect-0.14.7_pangeoforgerecipes-0.3.3
+        uses: ${{ format('pangeo-forge/recipe-prefect-action@pangeonotebook-2021.05.04_prefect-0.14.7_pangeoforgerecipes-{0}', steps.meta-yaml-parser.outputs.pangeo_forge_version) }}
         with:
           path_to_meta_yaml: ${{ steps.meta.outputs.META_YAML }}
           path_to_bakeries_yaml: bakeries.yaml
