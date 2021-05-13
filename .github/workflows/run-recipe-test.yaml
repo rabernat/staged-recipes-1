@@ -46,3 +46,4 @@ jobs:
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
           PREFECT__CLOUD__AUTH_TOKEN: ${{ secrets.PREFECT__CLOUD__AUTH_TOKEN }}
+          PREFECT_PROJECT_NAME: ${{ secrets.PREFECT_PROJECT_NAME }}
